@@ -75,7 +75,7 @@ cv2.destroyAllWindows()
 pi=3.14
 A=rvecs[0]
 B=rvecs[1]
-C=rvecs[2]
+C=-rvecs[2]
 
 
 
@@ -87,12 +87,12 @@ R = np.array([[ math.cos(C)*math.cos(B), 	-math.sin(C)*math.cos(A)+math.cos(C)*m
 
 
 R = np.transpose(R)
-b = np.array([52, 52, 104])
+b = np.array([52, 52, -104])
 
 coords = b.dot(R)
-coords[0] += tvecs[0]
-coords[1] += tvecs[1]
-coords[2] += tvecs[2]
+coords[0] += tvecs[0]*26
+coords[1] += tvecs[1]*26
+coords[2] += tvecs[2]*26
 
 print coords
 
