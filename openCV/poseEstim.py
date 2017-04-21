@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import glob
+import math
 
 
 
@@ -30,9 +31,9 @@ axis = np.float32([[3,0,0], [0,3,0], [0,0,-3]]).reshape(-1,3)
 
 # Loading of image
 
-#fname = glob.glob('./single/HD_18_archi.JPG')
 fname = './single/HD_18_archi.JPG'
-#fname = '01.jpg'
+#fname = './single/HD_18_im6.jpg'
+
 img = cv2.imread(fname)
 
 gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
@@ -69,13 +70,31 @@ cv2.destroyAllWindows()
 
 
 
+# Trying of desired camera coords computing
+
+pi=3.14
+A=rvecs[0]
+B=rvecs[1]
+C=rvecs[2]
 
 
 
+# Rotation matrix from rotation vect.
+
+R = np.array([[ math.cos(C)*math.cos(B), 	-math.sin(C)*math.cos(A)+math.cos(C)*math.sin(B)*math.sin(A) , 		math.sin(C)*math.sin(A) + math.cos(C)*math.sin(B)*math.cos(A)], 
+                  [ math.sin(C)*math.cos(B) , 	math.cos(C)*math.cos(A)+math.sin(C)*math.sin(B)*math.sin(A)  , 	-math.cos(C)*math.sin(A)+math.sin(C)*math.sin(B)*math.cos(A)], 
+                  [ -math.sin(B),  	math.cos(B)*math.sin(A) , 	math.cos(B)*math.cos(A)]])
 
 
+R = np.transpose(R)
+b = np.array([52, 52, 104])
 
+coords = b.dot(R)
+coords[0] += tvecs[0]
+coords[1] += tvecs[1]
+coords[2] += tvecs[2]
 
+print coords
 
 
 
