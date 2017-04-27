@@ -94,8 +94,30 @@ coords[0] += tvecs[0]*26
 coords[1] += tvecs[1]*26
 coords[2] += tvecs[2]*26
 
-print coords
+print ('coords in camera axis',coords)
 
+
+
+
+# Last step - computing coords of point in NED coords according to camera
+
+# GLOBAL_POSITION_INT ( #33 )  gives information about vehicle heading - 
+#                              (yaw angle) in degrees * 100, 0.0..359.99 degrees
+
+hdg = 3000  	 # heading
+
+teta= hdg/100*2*pi/360
+
+print teta
+
+R= np.array([[np.cos(teta),    0    , np.sin(teta)],
+            [    0       ,    1    ,       0     ],
+            [ -np.sin(teta),  0    , np.cos(teta)]])
+
+R = np.transpose(R)
+NEDPose=coords.dot(R)
+
+print ('NED',NEDPose)
 
 
 
