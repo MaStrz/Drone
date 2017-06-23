@@ -1,0 +1,11 @@
+#!/bin/bash
+
+I=1				# inicjujemy zmienną mówiącą o numerze elementu
+
+touch "A"
+touch "B"
+for WERS in $(cat lista.txt)
+do
+	echo "$WERS"
+	echo $WERS >> "${WERS:0:1}"
+done
