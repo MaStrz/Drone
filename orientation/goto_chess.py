@@ -8,6 +8,7 @@ import math
 import cv2
 import numpy as np
 import glob
+# import photo
 
 pi=3.14
 
@@ -51,9 +52,11 @@ vehicle = connect(connection_string, wait_ready=True)
 
 
 
+
 # function computing pose of desired point in camera's coords
 
 def compute_camCoords(fname):
+    img = photo.get_img()
     img = cv2.imread(fname)
     gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
     ret, corners = cv2.findChessboardCorners(gray, (9,6),None)
