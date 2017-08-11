@@ -8,6 +8,7 @@ import math
 import cv2
 import numpy as np
 import glob
+import My_poseEstim
 # import photo
 
 pi=3.14
@@ -56,46 +57,35 @@ vehicle = connect(connection_string, wait_ready=True)
 # function computing pose of desired point in camera's coords
 
 def compute_camCoords(fname):
-    img = photo.get_img()
-    img = cv2.imread(fname)
-    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-    ret, corners = cv2.findChessboardCorners(gray, (9,6),None)
 
-    criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
-    objp = np.zeros((6*9,3), np.float32)
-    objp[:,:2] = np.mgrid[0:9,0:6].T.reshape(-1,2)
-    axis = np.float32([[3,0,0], [0,3,0], [0,0,-3]]).reshape(-1,3)
+    # Find the rotation and translation vectors.
+    vecs = My_poseEstim.attitude()
+    rvecs=vecs[0]
+    tvecs=vecs[1]
+    print('rotation:', rvecs)
+    print('translation:', tvecs)
 
+    # Trying of desired camera coords computing
+    A=rvecs[0]
+    B=rvecs[1]
+    C=-rvecs[2]
 
-    if ret == True:
-        corners2 = cv2.cornerSubPix(gray,corners,(11,11),(-1,-1),criteria)
-
-        # Find the rotation and translation vectors.
-        ret, rvecs, tvecs= cv2.solvePnP(objp, corners2, mtx, dist)
-        #print('rotation:', rvecs)
-        #print('translation:', tvecs*26)
-
-        # Trying of desired camera coords computing
-        A=rvecs[0]
-        B=rvecs[1]
-        C=-rvecs[2]
-
-        # Rotation matrix from rotation vect.
-        R = np.array([[ math.cos(C)*math.cos(B), 	-math.sin(C)*math.cos(A)+math.cos(C)*math.sin(B)*math.sin(A) , 		math.sin(C)*math.sin(A) + math.cos(C)*math.sin(B)*math.cos(A)], 
+    # Rotation matrix from rotation vect.
+    R = np.array([[ math.cos(C)*math.cos(B), 	-math.sin(C)*math.cos(A)+math.cos(C)*math.sin(B)*math.sin(A) , 		math.sin(C)*math.sin(A) + math.cos(C)*math.sin(B)*math.cos(A)], 
                   [ math.sin(C)*math.cos(B) , 	math.cos(C)*math.cos(A)+math.sin(C)*math.sin(B)*math.sin(A)  , 	-math.cos(C)*math.sin(A)+math.sin(C)*math.sin(B)*math.cos(A)], 
                   [ -math.sin(B),  	math.cos(B)*math.sin(A) , 	math.cos(B)*math.cos(A)]])
 
 
-        R = np.transpose(R)
-        b = np.array([52, 52, -104])
+    R = np.transpose(R)
+    b = np.array([0, 0, 0])
 
-        coords = b.dot(R)
-        coords[0] += tvecs[0]*26   
-        coords[1] += tvecs[1]*26   
-        coords[2] += tvecs[2]*26   
+    coords = b.dot(R)
+    coords[0] += tvecs[0]   
+    coords[1] += tvecs[1]   
+    coords[2] += tvecs[2]   
 
-        #print ('coords in camera axis',coords)
-        return coords
+    #print ('coords in camera axis',coords)
+    return coords
 
 
 
@@ -160,11 +150,11 @@ print ("local location: %s" % pose)
 print pose
 
 
-NEDPose=compute_ned(compute_camCoords('./image/HD_18_archi.JPG'))
+NEDPose=compute_ned(compute_camCoords('./image/HD_18_football.JPG'))
 print "NED movement   %s " % NEDPose
 print NEDPose[0]
 #goto_ned(0.1*NEDPose[0], 0.1*NEDPose[1], vehicle.location.local_frame.down)
-goto_ned(vehicle.location.local_frame.north+NEDPose[2]*0.1, vehicle.location.local_frame.east+NEDPose[0]*0.1, vehicle.location.local_frame.down+NEDPose[1]*0.1,)
+goto_ned(vehicle.location.local_frame.north+NEDPose[2], vehicle.location.local_frame.east+NEDPose[0], vehicle.location.local_frame.down+NEDPose[1],)
 
 
 #Close vehicle object before exiting script
