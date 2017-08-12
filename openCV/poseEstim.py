@@ -31,7 +31,7 @@ axis = np.float32([[3,0,0], [0,3,0], [0,0,-3]]).reshape(-1,3)
 
 # Loading of image
 
-fname = './single/HD_18_archi.JPG'
+fname = './single/HD_18_chess.JPG'
 #fname = './single/HD_18_im6.jpg'
 
 img = cv2.imread(fname)

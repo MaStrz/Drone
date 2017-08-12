@@ -114,6 +114,7 @@ R= np.array([[np.cos(teta),    0    , np.sin(teta)],
             [    0       ,    1    ,       0     ],
             [ -np.sin(teta),  0    , np.cos(teta)]])
 
+R = np.transpose(R)
 NEDPose=coords.dot(R)
 
 print ('NED',NEDPose)

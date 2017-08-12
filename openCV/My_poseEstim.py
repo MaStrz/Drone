@@ -24,7 +24,7 @@ with np.load('./output/camera_coeffs.npz') as X:
 
 '''image loading'''
 
-fname = './single/HD_18_archi.JPG'
+fname = './single/HD_18_chess.JPG'
 #fname = './single/HD_18_im6.jpg'
 img = cv2.imread(fname)
 ''''''
