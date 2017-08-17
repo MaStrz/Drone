@@ -9,7 +9,7 @@ from pythonzenity import Entry
 def attitude():
     '''scale factor wich will be also entered by the user'''
 
-    scale=float(Entry(text="what is scale factor", entry_text="72.0"))
+    scale=float(Entry(text="what is scale factor", entry_text="1.0"))
     ''''''
 
 
@@ -25,7 +25,7 @@ def attitude():
 
     '''image loading'''
 
-    fname = './image/HD_18_football_2.JPG'
+    fname = './image/HD_18_football_3.JPG'
     #fname = './single/HD_18_im6.jpg'
     img = cv2.imread(fname)
     ''''''

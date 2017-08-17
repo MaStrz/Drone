@@ -77,14 +77,14 @@ def compute_camCoords(fname):
 
 
     R = np.transpose(R)
-    b = np.array([0, 0, 0])
+    d = np.array([33.5,20,10])	#33.5, 20, 10
 
-    coords = b.dot(R)
+    coords = d.dot(R)
     coords[0] += tvecs[0]   
     coords[1] += tvecs[1]   
     coords[2] += tvecs[2]   
 
-    #print ('coords in camera axis',coords)
+    print ('coords in camera axis',coords)
     return coords
 
 
@@ -150,11 +150,11 @@ print ("local location: %s" % pose)
 print pose
 
 
-NEDPose=compute_ned(compute_camCoords('./image/HD_18_football.JPG'))
+NEDPose=compute_ned(compute_camCoords('./image/HD_18_football_3.JPG'))
 print "NED movement   %s " % NEDPose
 print NEDPose[0]
-#goto_ned(0.1*NEDPose[0], 0.1*NEDPose[1], vehicle.location.local_frame.down)
-goto_ned(vehicle.location.local_frame.north+NEDPose[2]*0.1, vehicle.location.local_frame.east+NEDPose[0]*0.1, vehicle.location.local_frame.down+NEDPose[1]*0.1,)
+goto_ned(NEDPose[2], NEDPose[0], vehicle.location.local_frame.down)
+#goto_ned(vehicle.location.local_frame.north+NEDPose[2], vehicle.location.local_frame.east+NEDPose[0], vehicle.location.local_frame.down+NEDPose[1],)
 
 
 #Close vehicle object before exiting script
